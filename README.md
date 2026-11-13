@@ -1,65 +1,57 @@
-# COE292-MNIST-Classifier
-Repo for the machine learning project for COE292 which solves MNIST classification problem using KNN, SVM, and NN models.
-# 🧠 KNN & SVM Image Classification
+# MNIST Digit Classification: KNN vs SVM vs Neural Network
 
-## 📌 Overview
-This project applies **K-Nearest Neighbors (KNN)** and **Support Vector Machine (SVM)** models to a dataset of handwritten digit images (`dataset_7.csv`, 28×28 pixels). The dataset contains **70,000 samples** with pixel intensities (0–255) and labels (digits 0–9).
+A comparison of three classical and deep-learning approaches on handwritten digit recognition, built for the COE292 machine learning course at KFUPM. The notebook walks through preprocessing, model tuning, evaluation and a side-by-side comparison on the same 80/20 split.
 
-The goal is to preprocess the data, train classifiers, compare KNN with different distance metrics, and explore SVM with dimensionality reduction.
+![Python](https://img.shields.io/badge/Python-3-3776AB?logo=python&logoColor=white)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?logo=scikitlearn&logoColor=white)
+![Keras](https://img.shields.io/badge/Keras-D00000?logo=keras&logoColor=white)
+![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-F37626?logo=jupyter&logoColor=white)
 
----
+## Results
 
-## ⚙️ Features
-- Data preprocessing and normalization (`StandardScaler`)  
-- Visualization of original vs. normalized images  
-- **KNN Classifier**  
-  - Error rate vs. K visualization  
-  - Euclidean and Manhattan distance comparisons  
-  - Confusion matrices, classification reports, cross-validation  
-- **SVM Classifier**  
-  - Dimensionality reduction with PCA  
-  - Exploration of hard vs. soft margin SVMs  
-  - Visualization of support vectors  
+All models are evaluated on the same held-out test set of 14,000 images (80/20 split of 70,000 samples).
 
----
+| Model | Configuration | Test accuracy |
+|---|---|---|
+| **SVM** | RBF kernel, `C=1.0`, `gamma='scale'` on raw pixels | **97.8%** (5-fold CV mean: 97.7%) |
+| **Neural network** | Dense 64-32-16 + softmax, Adam (lr 0.001), early stopping | 96.95% (5-fold CV mean: 96.2%) |
+| **KNN** | K=3, Manhattan distance, standardised features | 95.9% |
 
-## 🛠️ Technologies Used
-- **Python 3.x**  
-- **Libraries**:  
-  - `numpy`, `pandas`  
-  - `matplotlib`, `seaborn`  
-  - `scikit-learn` (KNN, SVM, PCA, metrics, cross-validation)  
+Other experiments in the notebook:
 
----
+| Experiment | Result |
+|---|---|
+| KNN with Euclidean distance (K=3) | 94.7% |
+| SVM on 50 PCA components, linear / polynomial / RBF kernels (training subset) | 90.3% / 90.9% / 93.9% |
+| SVM, RBF kernel on standardised full data | 96.6% |
 
-## 🚀 Project Workflow
-### 1. Load Dataset  
-- `dataset_7.csv` with 70,000 entries, 785 columns (1 label + 784 pixel features).  
+**Takeaways:** the RBF-SVM was the strongest model here, and the neural network was close behind. Manhattan distance beat Euclidean for KNN on this pixel data. In this notebook the SVM scored higher on raw pixel intensities than on standardised features (97.8% vs 96.6%), a reminder to validate preprocessing per model rather than apply it by default.
 
-### 2. Preprocessing  
-- Split into training (80%) and testing (20%).  
-- Normalize features with `StandardScaler`.  
-- Visualize normalization effect on sample images.  
+## What the notebook covers
 
-### 3. KNN Classifier  
-- Trained with varying **K = 1–20**.  
-- Error rate plotted against K.  
-- Final models tested with **Euclidean** and **Manhattan** distances.  
-- Results:  
-  - **Euclidean (K=3)** → Accuracy ≈ **94.7%**  
-  - **Manhattan (K=3)** → Accuracy ≈ **95.9%**  
+1. **Data loading and preprocessing**: 70,000 samples, 785 columns (label plus 784 pixel values), 80/20 train/test split, `StandardScaler`, visual comparison of original vs normalised images.
+2. **KNN**: error rate vs K (1–20), Euclidean vs Manhattan distance, confusion matrices, classification reports and cross-validation.
+3. **SVM**: PCA to 50 components, kernel comparison (linear, polynomial, RBF), final model with 5-fold cross-validation.
+4. **Neural network**: a small fully connected Keras network with early stopping, evaluated on the test set and with stratified 5-fold cross-validation.
+5. **Comparison**: a bar chart of KNN, SVM and neural-network accuracy.
 
-### 4. SVM Classifier  
-- PCA reduced features to 50 principal components.  
-- Hard and soft margin SVMs tested on sample subsets.  
-- Support vectors analyzed and compared.  
+## Running it
 
----
+The dataset (`dataset_7.csv`) was provided by the course and is **not included** in this repository. Place it next to the notebook, then:
 
-## 📊 Results
-- **KNN (Manhattan, K=3)** achieved the best performance: **95.9% accuracy** with strong precision/recall across all digit classes.  
-- **SVM with PCA** showed effective dimensionality reduction, allowing margin experiments with manageable complexity.  
+```bash
+pip install numpy pandas matplotlib seaborn scikit-learn tensorflow jupyter
+jupyter notebook "COE292 Project Final.ipynb"
+```
 
----
+## Tech stack
 
-## 📂 Repository Structure
+Python, NumPy, pandas, scikit-learn (KNN, SVM, PCA, metrics, cross-validation), TensorFlow/Keras, Matplotlib, Seaborn.
+
+## Repository structure
+
+```
+.
+├── COE292 Project Final.ipynb   # full analysis, from preprocessing to model comparison
+└── README.md
+```
