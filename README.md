@@ -15,7 +15,7 @@ All models are evaluated on the same held-out test set of 14,000 images (80/20 s
 |---|---|---|
 | **SVM** | RBF kernel, `C=1.0`, `gamma='scale'` on raw pixels | **97.8%** (5-fold CV mean: 97.7%) |
 | **Neural network** | Dense 64-32-16 + softmax, Adam (lr 0.001), early stopping | 96.95% (5-fold CV mean: 96.2%) |
-| **KNN** | K=3, Manhattan distance, standardised features | 95.9% |
+| **KNN** | K=3, Manhattan distance, standardised features | 96.0% (5-fold CV mean: 95.8%) |
 
 Other experiments in the notebook:
 
@@ -24,6 +24,8 @@ Other experiments in the notebook:
 | KNN with Euclidean distance (K=3) | 94.7% |
 | SVM on 50 PCA components, linear / polynomial / RBF kernels (training subset) | 90.3% / 90.9% / 93.9% |
 | SVM, RBF kernel on standardised full data | 96.6% |
+
+**Evaluation notes:** the neural network's early stopping monitors the test split (`validation_data=(X_test, y_test)` with `restore_best_weights`), so its 96.95% is slightly optimistic. Cross-validation scopes also differ: the SVM's runs on the training split, while the neural network's runs on all 70,000 rows.
 
 **Takeaways:** the RBF-SVM was the strongest model here, and the neural network was close behind. Manhattan distance beat Euclidean for KNN on this pixel data. In this notebook the SVM scored higher on raw pixel intensities than on standardised features (97.8% vs 96.6%), a reminder to validate preprocessing per model rather than apply it by default.
 
